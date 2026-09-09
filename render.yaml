@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aureuserp
+    plan: free
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    healthCheckPath: /up
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,5 @@
+node_modules/
+leads_parceiros.json
+.env
+.DS_Store
+*.log

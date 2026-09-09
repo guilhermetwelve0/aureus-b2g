@@ -1,0 +1,25 @@
+{
+  "name": "aureus-b2g",
+  "version": "1.0.0",
+  "description": "Aureus B2G - Plataforma de Inteligência em Licitações, Radar PNCP, Automação de CNDs e Gestão para Consultorias e Licitantes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "b2g",
+    "licitacoes",
+    "pncp",
+    "compras-governamentais",
+    "cnd",
+    "consultorias",
+    "lei-14133"
+  ],
+  "author": "Guilherme Cabral",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
