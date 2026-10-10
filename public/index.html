@@ -60,9 +60,9 @@
         <button id="btn-open-demo-modal" class="btn btn-secondary">
           <i class="fa-brands fa-whatsapp text-emerald"></i> Falar com Especialista
         </button>
-        <a href="#portal-parceiro" class="btn btn-primary">
-          <i class="fa-solid fa-bolt text-gold"></i> 30 Dias VIP Grátis
-        </a>
+        <button id="btn-header-trial" class="btn btn-primary btn-open-trial" data-open-trial="true">
+          <i class="fa-solid fa-bolt text-gold"></i> Testar 7 Dias Grátis
+        </button>
       </div>
     </div>
   </header>
@@ -82,9 +82,9 @@
         </p>
 
         <div class="hero-buttons">
-          <a href="#portal-parceiro" class="btn btn-primary btn-large">
-            <i class="fa-solid fa-crown text-gold"></i> Quero Acesso VIP de 30 Dias
-          </a>
+          <button id="btn-hero-trial" class="btn btn-primary btn-large btn-open-trial" data-open-trial="true">
+            <i class="fa-solid fa-bolt text-gold"></i> Teste Grátis por 7 Dias (Sem Cartão)
+          </button>
           <a href="#radar-pncp" class="btn btn-outline btn-large">
             <i class="fa-solid fa-crosshairs"></i> Explorar Radar ao Vivo
           </a>
@@ -585,12 +585,12 @@
       <h2 class="cta-title">Pronto para Dominar o Mercado de Licitações Públicas?</h2>
       <p class="cta-desc">Junte-se às consultorias que operam com inteligência preditiva, auditoria anti-inabilitação e máxima segurança jurídica.</p>
       <div class="cta-btn-wrapper">
-        <button id="btn-final-whatsapp" class="btn btn-primary btn-large">
-          <i class="fa-brands fa-whatsapp"></i> Falar com Guilherme Cabral no WhatsApp
+        <button id="btn-final-trial" class="btn btn-primary btn-large btn-open-trial" data-open-trial="true">
+          <i class="fa-solid fa-bolt text-gold"></i> Teste Grátis por 7 Dias (Sem Cartão)
         </button>
-        <a href="#portal-parceiro" class="btn btn-outline btn-large">
-          <i class="fa-solid fa-bolt"></i> Ativar Acesso VIP Grátis (30 Dias)
-        </a>
+        <button id="btn-final-whatsapp" class="btn btn-outline btn-large">
+          <i class="fa-brands fa-whatsapp text-emerald"></i> Falar com Guilherme Cabral no WhatsApp
+        </button>
       </div>
     </div>
   </section>
@@ -607,7 +607,7 @@
           A plataforma de inteligência de compras públicas, radar de editais e auditoria preventiva em conformidade com a Lei nº 14.133/2021 e Portal Nacional de Contratações Públicas (PNCP).
         </p>
         <div class="social-links">
-          <a href="https://wa.me/5519998927472" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          <a href="https://wa.me/5541995372945" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
           <a href="#"><i class="fa-brands fa-linkedin"></i></a>
           <a href="#"><i class="fa-brands fa-github"></i></a>
         </div>
@@ -641,10 +641,10 @@
           <i class="fa-solid fa-envelope text-gold"></i> contato@aureuserp.com.br
         </p>
         <p class="footer-contact-item">
-          <i class="fa-brands fa-whatsapp text-emerald"></i> +55 (19) 99892-7472
+          <i class="fa-brands fa-whatsapp text-emerald"></i> +55 (41) 99537-2945
         </p>
         <p class="footer-contact-item">
-          <i class="fa-solid fa-location-dot text-cyan"></i> Campinas - SP / Atendimento Nacional
+          <i class="fa-solid fa-location-dot text-cyan"></i> Curitiba - PR / Atendimento Nacional
         </p>
       </div>
     </div>
@@ -653,6 +653,106 @@
       <p>© 2026 Aureus B2G Intelligence Systems. Todos os direitos reservados.</p>
     </div>
   </footer>
+
+  <!-- Modal: Teste Grátis de 7 Dias (Sem Cartão) -->
+  <div id="trial-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="trial-modal-title">
+    <div class="modal-card trial-modal-card">
+      <button id="btn-close-trial-modal" class="btn-close-modal" aria-label="Fechar Modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      
+      <div class="modal-header">
+        <div class="trial-modal-badge">
+          <i class="fa-solid fa-shield-check text-emerald"></i>
+          <span>TESTE GRÁTIS POR 7 DIAS • SEM CARTÃO</span>
+        </div>
+        <h3 id="trial-modal-title" class="modal-title">
+          Comece seu Teste Grátis na <span class="text-gradient-gold">Aureus B2G</span>
+        </h3>
+        <p class="text-sm text-muted">
+          Acesso total ao Radar PNCP ao vivo, Auditor de CNDs e Calculadora de BDI. Sem necessidade de cartão de crédito e sem fidelidade.
+        </p>
+      </div>
+
+      <!-- Risk Reduction / Trust Badges Strip -->
+      <div class="trial-risk-reduction-strip">
+        <div class="risk-badge-item">
+          <i class="fa-solid fa-ban text-emerald"></i>
+          <span>Sem Fidelidade</span>
+        </div>
+        <div class="risk-badge-item">
+          <i class="fa-solid fa-credit-card-slash text-gold"></i>
+          <span>Sem Cartão</span>
+        </div>
+        <div class="risk-badge-item">
+          <i class="fa-solid fa-scale-balanced text-cyan"></i>
+          <span>Lei 14.133/2021</span>
+        </div>
+        <div class="risk-badge-item">
+          <i class="fa-solid fa-bolt text-gold"></i>
+          <span>Ativação Imediata</span>
+        </div>
+      </div>
+
+      <form id="trial-form" novalidate>
+        <div class="form-group">
+          <label for="trial-nome">
+            <i class="fa-solid fa-user text-gold"></i> Nome do Decisor / Responsável:
+          </label>
+          <input 
+            type="text" 
+            id="trial-nome" 
+            name="nome" 
+            placeholder="Ex: Carlos Eduardo de Oliveira" 
+            required 
+            autocomplete="name"
+          >
+          <div class="form-error-message" id="error-trial-nome"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="trial-whatsapp">
+            <i class="fa-brands fa-whatsapp text-emerald"></i> WhatsApp com DDD:
+          </label>
+          <input 
+            type="tel" 
+            id="trial-whatsapp" 
+            name="whatsapp" 
+            placeholder="(41) 99537-2945" 
+            required 
+            autocomplete="tel"
+            maxlength="18"
+          >
+          <div class="form-error-message" id="error-trial-whatsapp"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="trial-cnpj-nicho">
+            <i class="fa-solid fa-building text-cyan"></i> CNPJ da Empresa ou Nicho de Atuação:
+          </label>
+          <input 
+            type="text" 
+            id="trial-cnpj-nicho" 
+            name="cnpjNicho" 
+            placeholder="Ex: 12.345.678/0001-90 ou Engenharia / Medicamentos / TI" 
+            required
+          >
+          <div class="form-error-message" id="error-trial-cnpj-nicho"></div>
+        </div>
+
+        <button type="submit" id="btn-submit-trial" class="btn btn-primary btn-block btn-large">
+          <i class="fa-brands fa-whatsapp"></i> Ativar Teste Grátis de 7 Dias no WhatsApp
+        </button>
+
+        <div class="trial-form-footer">
+          <div class="trial-security-note">
+            <i class="fa-solid fa-lock text-emerald"></i>
+            <span>Seus dados estão protegidos pela LGPD. Atendimento direto com Guilherme Cabral (+55 41 99537-2945).</span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- Modal: Agendamento & Contato VIP -->
   <div id="demo-modal" class="modal-backdrop">
@@ -675,7 +775,7 @@
         </div>
 
         <div class="direct-cta-actions">
-          <a id="btn-modal-whatsapp" href="https://wa.me/5519998927472?text=Ol%C3%A1%2C%20Guilherme!%20Vi%20a%20plataforma%20Aureus%20B2G%20e%20gostaria%20de%20conhecer%20a%20demonstra%C3%A7%C3%A3o%20e%20o%20programa%20para%20consultorias." target="_blank" class="btn btn-primary btn-block btn-large">
+          <a id="btn-modal-whatsapp" href="https://wa.me/5541995372945?text=Ol%C3%A1%2C%20Guilherme!%20Vi%20a%20plataforma%20Aureus%20B2G%20e%20gostaria%20de%20conhecer%20a%20demonstra%C3%A7%C3%A3o%20e%20o%20programa%20para%20consultorias." target="_blank" class="btn btn-primary btn-block btn-large">
             <i class="fa-brands fa-whatsapp"></i> Iniciar Conversa no WhatsApp
           </a>
         </div>

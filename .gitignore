@@ -3,3 +3,8 @@ leads_parceiros.json
 .env
 .DS_Store
 *.log
+.agents/
+__pycache__/
+*.py
+TEST_*.md
+diagnose_short_viewport.py

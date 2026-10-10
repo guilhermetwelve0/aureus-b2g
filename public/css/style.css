@@ -51,6 +51,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -1381,6 +1382,17 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text-muted);
 }
 
+/* Smooth Modal Transitions */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleUp {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 /* Modal */
 .modal-backdrop {
   position: fixed;
@@ -1395,10 +1407,18 @@ input[type="range"]::-webkit-slider-thumb {
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-backdrop.active {
   display: flex;
+  animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-backdrop.active .modal-card {
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-card {
@@ -1410,6 +1430,11 @@ input[type="range"]::-webkit-slider-thumb {
   width: 100%;
   position: relative;
   box-shadow: var(--shadow-glow-gold);
+  margin: auto;
+  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modal-card.modal-large {
@@ -1476,6 +1501,80 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text-muted);
 }
 
+/* Trial Modal Specifics */
+.trial-modal-card {
+  max-width: 520px;
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(245, 158, 11, 0.15);
+}
+
+.trial-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--accent-emerald-light);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.trial-risk-reduction-strip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+.risk-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-error-message {
+  font-size: 0.78rem;
+  color: var(--accent-red);
+  margin-top: 5px;
+  min-height: 16px;
+  display: none;
+}
+
+.form-error-message.visible {
+  display: block;
+}
+
+.input-invalid {
+  border-color: var(--accent-red) !important;
+  box-shadow: 0 0 0 1px var(--accent-red) !important;
+}
+
+.trial-form-footer {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.trial-security-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+
 /* Printable Dossier Specifics */
 @media print {
   body {
@@ -1518,4 +1617,374 @@ input[type="range"]::-webkit-slider-thumb {
   .bar-divider { display: none; }
   .footer-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
+  .header-actions .btn-secondary { display: none; }
+  .header-actions .btn { padding: 8px 12px; font-size: 0.85rem; }
+  .brand-tagline { display: none; }
+  .trial-modal-card {
+    padding: 24px 18px;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .trial-risk-reduction-strip {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+/* Short / Landscape Viewports (< 600px height) */
+@media (max-height: 600px) {
+  .modal-backdrop {
+    align-items: flex-start;
+    padding: 12px;
+  }
+
+  .modal-card {
+    max-height: calc(100vh - 24px);
+    max-height: calc(100dvh - 24px);
+    padding: 24px 20px;
+    margin: 0 auto;
+  }
+
+  .modal-header {
+    margin-bottom: 14px;
+  }
+
+  .modal-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+
+  .trial-risk-reduction-strip {
+    margin-bottom: 14px;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .btn-close-modal {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* ==========================================================================
+   Mobile Responsive Refinement (< 480px down to 320px)
+   Prevents element bleeding, overflow and ensures clean wrapping
+   ========================================================================== */
+@media (max-width: 480px) {
+  /* 1. Global Container & Layout */
+  .container {
+    padding: 0 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 2. Hero Section */
+  .hero-section {
+    padding: 30px 0 20px;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .hero-content,
+  .hero-interactive-card {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hero-badge {
+    max-width: 100%;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+    white-space: normal;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .hero-title .text-gradient-gold {
+    display: inline;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .hero-subtitle {
+    font-size: 0.92rem;
+    line-height: 1.45;
+    margin-bottom: 20px;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .hero-buttons {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .hero-buttons .btn,
+  .hero-buttons .btn-large,
+  #btn-hero-trial {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 12px;
+    font-size: 0.88rem;
+    white-space: normal;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .hero-trust {
+    width: 100%;
+  }
+
+  .trust-item {
+    font-size: 0.8rem;
+    word-break: break-word;
+  }
+
+  /* Dashboard Preview Card */
+  .dashboard-preview-card {
+    padding: 14px 12px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .card-header-clean {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .card-metric-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .card-metric-row .text-right {
+    text-align: left;
+  }
+
+  .mock-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .stat-mini {
+    padding: 6px 4px;
+  }
+
+  .stat-mini-num {
+    font-size: 0.95rem;
+  }
+
+  .stat-mini-label {
+    font-size: 0.65rem;
+  }
+
+  /* 3. Radar PNCP Controls & Search Form */
+  .radar-controls-card {
+    padding: 16px 14px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .radar-search-form,
+  .search-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .radar-search-form input,
+  .search-input-group input {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 12px 14px 12px 42px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+
+  .search-icon {
+    left: 14px;
+    top: 23px;
+    transform: translateY(-50%);
+  }
+
+  #btn-search-pncp,
+  .radar-search-form button,
+  .search-input-group button {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+  }
+
+  .filters-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+
+  .filter-group select {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .filter-tags {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .tag-badge {
+    font-size: 0.72rem;
+    padding: 3px 8px;
+  }
+
+  /* 4. Radar Tender Cards Grid */
+  .radar-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .tender-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 16px 14px;
+    box-sizing: border-box;
+  }
+
+  .tender-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .tender-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* 5. Auditor CND Section & Cert Cards */
+  .auditor-tool-card {
+    padding: 18px 14px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .auditor-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .preset-buttons {
+    width: 100%;
+  }
+
+  .btn-chip {
+    font-size: 0.72rem;
+    padding: 4px 8px;
+  }
+
+  .auditor-input-bar {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .auditor-input-bar .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .audit-score-summary {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .audit-actions-row {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .audit-actions-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cert-checklist-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .cert-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 14px 12px;
+    box-sizing: border-box;
+  }
+
+  .cert-card.valid,
+  .cert-card.warning,
+  .cert-card.critical {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* 6. Partner, BDI & CTA Sections */
+  .partner-card-wrapper {
+    padding: 20px 14px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .partner-form-card {
+    padding: 20px 14px;
+  }
+
+  .bdi-inputs-panel,
+  .bdi-display-card {
+    padding: 20px 14px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
 }

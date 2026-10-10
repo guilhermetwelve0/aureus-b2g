@@ -5,7 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- Constants & Global State ---
-  const WHATSAPP_PHONE = '5519998927472';
+  const WHATSAPP_PHONE = '5541995372945';
   let activeEditalParaDossie = null;
 
   // Formatters
@@ -429,6 +429,273 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- 4.5 Trial Modal (7-Day Free Trial & WhatsApp Routing) ---
+  const trialModal = document.getElementById('trial-modal');
+  const btnCloseTrialModal = document.getElementById('btn-close-trial-modal');
+  const trialForm = document.getElementById('trial-form');
+  const trialNomeInput = document.getElementById('trial-nome');
+  const trialWhatsappInput = document.getElementById('trial-whatsapp');
+  const trialCnpjNichoInput = document.getElementById('trial-cnpj-nicho');
+  const btnSubmitTrial = document.getElementById('btn-submit-trial');
+
+  function setTrialFieldError(fieldId, message) {
+    const input = document.getElementById(fieldId);
+    const errorEl = document.getElementById('error-' + fieldId);
+    if (input) input.classList.add('input-invalid');
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.classList.add('visible');
+    }
+  }
+
+  function clearTrialFieldError(fieldId) {
+    const input = document.getElementById(fieldId);
+    const errorEl = document.getElementById('error-' + fieldId);
+    if (input) input.classList.remove('input-invalid');
+    if (errorEl) {
+      errorEl.textContent = '';
+      errorEl.classList.remove('visible');
+    }
+  }
+
+  function clearAllTrialErrors() {
+    clearTrialFieldError('trial-nome');
+    clearTrialFieldError('trial-whatsapp');
+    clearTrialFieldError('trial-cnpj-nicho');
+  }
+
+  let lastActiveElementBeforeTrialModal = null;
+
+  function openTrialModal() {
+    if (!trialModal) return;
+    lastActiveElementBeforeTrialModal = document.activeElement;
+    clearAllTrialErrors();
+    trialModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      if (trialNomeInput) trialNomeInput.focus();
+    }, 80);
+  }
+
+  function closeTrialModal() {
+    if (!trialModal) return;
+    trialModal.classList.remove('active');
+    document.body.style.overflow = '';
+    clearAllTrialErrors();
+    if (lastActiveElementBeforeTrialModal && typeof lastActiveElementBeforeTrialModal.focus === 'function') {
+      lastActiveElementBeforeTrialModal.focus();
+      lastActiveElementBeforeTrialModal = null;
+    }
+  }
+
+  // Bind trial triggers across the page (Header, Hero, Final Section, etc.)
+  const trialTriggers = document.querySelectorAll('.btn-open-trial, #btn-header-trial, #btn-hero-trial, #btn-final-trial');
+  trialTriggers.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openTrialModal();
+    });
+  });
+
+  if (btnCloseTrialModal) {
+    btnCloseTrialModal.addEventListener('click', closeTrialModal);
+  }
+
+  // Accessible Modal Focus Trap (WCAG 2.1 SC 2.1.2 & SC 2.4.3)
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' && e.keyCode !== 9) return;
+    if (!trialModal || !trialModal.classList.contains('active')) return;
+
+    const focusableSelectors = 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusables = Array.from(trialModal.querySelectorAll(focusableSelectors))
+      .filter(el => el.offsetParent !== null || el.offsetWidth > 0 || el.offsetHeight > 0);
+
+    const firstEl = btnCloseTrialModal || focusables[0];
+    const lastEl = (!btnSubmitTrial || btnSubmitTrial.disabled)
+      ? (focusables[focusables.length - 1] || btnSubmitTrial)
+      : btnSubmitTrial;
+
+    if (!firstEl || !lastEl) return;
+
+    if (e.shiftKey) {
+      // Shift + Tab: reverse cycling from first element to last, or capture escaped focus
+      if (document.activeElement === firstEl || !trialModal.contains(document.activeElement)) {
+        e.preventDefault();
+        lastEl.focus();
+      }
+    } else {
+      // Tab: forward cycling from last element to first, or capture escaped focus
+      if (document.activeElement === lastEl || !trialModal.contains(document.activeElement)) {
+        e.preventDefault();
+        firstEl.focus();
+      }
+    }
+  });
+
+  // Phone masking: (XX) XXXXX-XXXX or (XX) XXXX-XXXX with +55 international prefix handling
+  function formatWhatsAppMask(value) {
+    if (!value) return '';
+    let digits = value.replace(/\D/g, '');
+
+    // Strip leading international prefix +55 if 12 or 13 digits (preserves DDD 55 on 10/11 digits)
+    if ((digits.length === 12 || digits.length === 13) && digits.startsWith('55')) {
+      digits = digits.slice(2);
+    }
+
+    digits = digits.slice(0, 11);
+    if (!digits) return '';
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+  }
+
+  if (trialWhatsappInput) {
+    // Intercept paste to handle raw unformatted strings (e.g. +55 19 99892-7472) before browser clipping
+    trialWhatsappInput.addEventListener('paste', (e) => {
+      const pasted = (e.clipboardData || window.clipboardData)?.getData('text');
+      if (pasted) {
+        e.preventDefault();
+        trialWhatsappInput.value = formatWhatsAppMask(pasted);
+        clearTrialFieldError('trial-whatsapp');
+      }
+    });
+
+    trialWhatsappInput.addEventListener('input', () => {
+      trialWhatsappInput.value = formatWhatsAppMask(trialWhatsappInput.value);
+      clearTrialFieldError('trial-whatsapp');
+    });
+  }
+
+  if (trialNomeInput) {
+    trialNomeInput.addEventListener('input', () => {
+      clearTrialFieldError('trial-nome');
+    });
+  }
+
+  if (trialCnpjNichoInput) {
+    trialCnpjNichoInput.addEventListener('input', () => {
+      clearTrialFieldError('trial-cnpj-nicho');
+    });
+  }
+
+  // Trial form submission and validation
+  if (trialForm) {
+    trialForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearAllTrialErrors();
+
+      const nome = trialNomeInput ? trialNomeInput.value.trim() : '';
+      const whatsapp = trialWhatsappInput ? trialWhatsappInput.value.trim() : '';
+      const cnpjNicho = trialCnpjNichoInput ? trialCnpjNichoInput.value.trim() : '';
+
+      let hasError = false;
+
+      // Validate Nome (minimum 2 characters)
+      if (!nome || nome.length < 2) {
+        setTrialFieldError('trial-nome', 'Por favor, informe seu nome completo (mínimo de 2 caracteres).');
+        hasError = true;
+      }
+
+      // Validate WhatsApp (valid DDD and 10 or 11 digits, mobile starts with 9)
+      let rawDigits = whatsapp.replace(/\D/g, '');
+      if ((rawDigits.length === 12 || rawDigits.length === 13) && rawDigits.startsWith('55')) {
+        rawDigits = rawDigits.slice(2);
+      }
+      const digits = rawDigits.slice(0, 11);
+      const ddd = parseInt(digits.slice(0, 2), 10);
+      const validDdd = !isNaN(ddd) && ddd >= 11 && ddd <= 99;
+      const validLength = digits.length === 10 || digits.length === 11;
+      const validMobile = digits.length !== 11 || digits[2] === '9';
+
+      if (!validLength || !validDdd || !validMobile) {
+        setTrialFieldError('trial-whatsapp', 'Informe um WhatsApp válido com DDD no formato (XX) 9XXXX-XXXX.');
+        hasError = true;
+      }
+
+      // Validate CNPJ or Nicho (14 digits CNPJ or minimum 3 characters niche)
+      const cnpjDigits = cnpjNicho.replace(/\D/g, '');
+      const isPureDigitsOrCnpjFormat = cnpjDigits.length > 0 && /^[\d\.\-\/\s]+$/.test(cnpjNicho);
+      if (isPureDigitsOrCnpjFormat) {
+        if (cnpjDigits.length !== 14) {
+          setTrialFieldError('trial-cnpj-nicho', 'Informe um CNPJ válido com 14 dígitos ou o nicho de atuação da empresa.');
+          hasError = true;
+        }
+      } else {
+        if (!cnpjNicho || cnpjNicho.length < 3) {
+          setTrialFieldError('trial-cnpj-nicho', 'Informe o CNPJ ou o nicho de atuação da empresa (mínimo de 3 caracteres).');
+          hasError = true;
+        }
+      }
+
+      if (hasError) {
+        const firstInvalid = trialModal ? trialModal.querySelector('.input-invalid') : null;
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      // Submit state feedback
+      const originalBtnContent = btnSubmitTrial ? btnSubmitTrial.innerHTML : '';
+      if (btnSubmitTrial) {
+        btnSubmitTrial.disabled = true;
+        btnSubmitTrial.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Redirecionando para WhatsApp...';
+      }
+
+      const displayWhatsapp = formatWhatsAppMask(whatsapp) || whatsapp;
+
+      // Asynchronous lead persistence fallback
+      try {
+        fetch('/api/parceiros/vip', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome,
+            whatsapp: displayWhatsapp,
+            consultoria: cnpjNicho,
+            segmento: 'Teste Grátis 7 Dias (Lei 14.133)',
+            carteiraClientes: '1-5',
+            origem: 'Modal Teste Grátis 7 Dias'
+          })
+        }).catch(err => {
+          console.warn('Fallback de persistência:', err);
+        });
+      } catch (err) {
+        console.warn('Erro ao chamar API de persistência:', err);
+      }
+
+      // Format markdown message for WhatsApp
+      const msg = `Olá, Guilherme! Gostaria de ativar meu *Teste Grátis por 7 Dias (Sem Cartão)* na plataforma *Aureus B2G*.\n\n` +
+                  `📋 *Dados da Solicitação:*\n` +
+                  `• *Nome do Decisor:* ${nome}\n` +
+                  `• *WhatsApp:* ${displayWhatsapp}\n` +
+                  `• *CNPJ / Nicho:* ${cnpjNicho}\n\n` +
+                  `🎯 *Objetivo:* Testar o Radar PNCP e a conformidade da Lei nº 14.133/2021.\n` +
+                  `Poderia liberar meu acesso e instruções de início?`;
+
+      const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
+
+      // Direct WhatsApp dispatch
+      window.open(whatsappUrl, '_blank');
+
+      // Feedback animation and modal close
+      setTimeout(() => {
+        if (btnSubmitTrial) {
+          btnSubmitTrial.innerHTML = '<i class="fa-solid fa-circle-check"></i> Redirecionado com Sucesso!';
+          btnSubmitTrial.style.background = 'var(--accent-emerald)';
+        }
+        setTimeout(() => {
+          closeTrialModal();
+          if (trialForm) trialForm.reset();
+          if (btnSubmitTrial) {
+            btnSubmitTrial.innerHTML = originalBtnContent;
+            btnSubmitTrial.disabled = false;
+            btnSubmitTrial.style.background = '';
+          }
+        }, 1200);
+      }, 600);
+    });
+  }
+
   // --- 5. Modals (Demo Specialist & Dossier) ---
   const demoModal = document.getElementById('demo-modal');
   const btnOpenDemoModal = document.getElementById('btn-open-demo-modal');
@@ -583,9 +850,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Close modals on click outside
+  // Close modals on click outside or Escape key
   window.addEventListener('click', (e) => {
+    if (e.target === trialModal) closeTrialModal();
     if (e.target === demoModal) closeDemoModal();
     if (e.target === dossierModal) dossierModal.classList.remove('active');
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeTrialModal();
+      closeDemoModal();
+      if (dossierModal) dossierModal.classList.remove('active');
+    }
   });
 });
